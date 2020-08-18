@@ -377,7 +377,7 @@ client.on('message', async (msg) => {
                 dest.id_discord = "${msg.author.id}"
             ;`
             /* await executeQuery(query).catch(e => { console.log(e); return; }); */
-            setTimeout(500,()=>{
+            setTimeout(()=>{
                 msg.channel.send(`$givek ${formatID(msg.author.id)} ${message[1]}`).then(() => {
                     let filter = a => a.author.id == mudaeID && a.content.startsWith('**cassinobot');
                     let waiting = false;
@@ -403,7 +403,7 @@ client.on('message', async (msg) => {
                     }
                     )
                 })
-            })
+            },500)
            
             return;
         } else {
