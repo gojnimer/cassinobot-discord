@@ -322,7 +322,7 @@ client.on('message', async (msg) => {
 
 
 
-    if (message[0] === `${prefix}rouletteee` || message[0] === `${prefix}r`) {
+    if (message[0] === `${prefix}roulette` || message[0] === `${prefix}r`) {
         let check = await checkLogin(msg.author.id).catch((e) => { msg.reply(e); return; });
         if (check == 0) {
             msg.reply('você ainda não se cadastrou, digite &register');
