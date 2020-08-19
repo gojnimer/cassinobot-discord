@@ -436,25 +436,27 @@ client.on('message', async (msg) => {
     }
 
 
-    if (message[0] === `${prefix}cassinohelp`) {
+    if (message[0].toLowerCase() === `${prefix}cassinohelp` || message[0] === `${prefix}chelp`) {
         /* msg.channel.send('teste'); */
         const exampleEmbed = new Discord.MessageEmbed()
-            .setColor('#0099ff')
-            .setTitle('Some title')
-            .setURL('https://discord.js.org/')
-            .setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
-            .setDescription('Some description here')
-            .setThumbnail('https://i.imgur.com/wSTFkRM.png')
+            .setColor('#cc1b26')
+            .setTitle('Bem-vindo ao cassino do boltz')
+            .setAuthor('Comandos do cassinobot', 'https://4.bp.blogspot.com/-R2r-PNdHzog/Ug2OOz8-AjI/AAAAAAAAgrk/MGPugRqy4Bc/s1600/news_large_touch_stamp1.jpg')
+            .setDescription('Tem kakeras sobrando? Se sentindo sortudo hoje?'+ <br/> + 'Aqui no Cassinobot do boltz você pode apostar seus kakeras pra tentar passar a mao na carteira dos seus amigos.'+ <br/> +'Quanto mais kakeras você apostar, masi chances de ganhar!')
+            .setThumbnail('https://i.imgur.com/Zbnfud3.png')
             .addFields(
-                { name: 'Regular field title', value: 'Some value here' },
-                { name: '\u200B', value: '\u200B' },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
+                { name: '$register', value: 'Registra você no banco de dados do cassino.' },
+                { name: '$givek @cassinobot do boltz <quantidade de kakeras>', value: 'Deposita kakeras na banca do cassino.' },
+                { name: '$balance', value: 'Mostra quanta kakera você tem na banca do cassino.' },
+                { name: '$retrieve <quantidade de kakera>', value: 'Saca seus kakeras da banca do cassino.' },
+                { name: '$roulette <opcional - minimo de kakera á apostar> ($r) ', value: 'Cria uma roleta de apostas.' },
+                { name: '$bet <quantidade de kakera>', value: 'Aposta kakeras na roleta ativa.(Ao ultiliza-lo mais uma vez você substitui sua aposta, não adiciona.' },
+                { name: '$players', value: 'Mostra as apostas da roleta ativa.' },
+                { name: '$spin', value: 'Sorteia um vencedor na roleta ativa.(Apenas o criador da roleta pode sortear.)' },
+                { name: '$cassinohelp ($chelp)', value: 'Mostra os comandos do cassinobot.' },
+                { name: '$botbalance', value: 'Mostra quanta kakera o cassino tem.' },
             )
-            .addField('Inline field title', 'Some value here', true)
-            .setImage('https://i.imgur.com/wSTFkRM.png')
-            .setTimestamp()
-            .setFooter('Some footer text here', 'https://i.imgur.com/wSTFkRM.png');
+            .setFooter('Que as apostas comecem e que a sorte esteja sempre em seu favor', 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS3cEyAQLTrs6QA-rpZ_7WLzOuy-HFwee6SKQ&usqp=CAU');
 
         msg.channel.send(exampleEmbed);
     }
