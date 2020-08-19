@@ -513,27 +513,29 @@ client.on('message', async (msg) => {
                 if (error != 'Error') {
                     msg.channel.send(`${message[0]}, ocorreu um erro, verifique se você é registrado usando ${prefix}register`);
                 }
-
-                msg.channel.send(`$givek ${message[0]} ${value[1]}`).then(() => {
-                    let filter = a => a.author.id == mudaeID && a.content.startsWith('**cassinobot');
-                    let waiting = false;
-                    setTimeout(() => {
-                        if (!waiting) {
-                            msg.channel.send('y');
+                setTimeout(()=>{
+                    msg.channel.send(`$givek ${message[0]} ${value[1]}`).then(() => {
+                        let filter = a => a.author.id == mudaeID && a.content.startsWith('**cassinobot');
+                        let waiting = false;
+                        setTimeout(() => {
+                            if (!waiting) {
+                                msg.channel.send('y');
+                            }
+                        }, 5000)
+                        msg.channel.awaitMessages(filter, { max: 1, time: 15000, errors: ['ocorreu um erro, fale com um administrador'] }).then(async () => {
+                            let filter = a => a.author.id == mudaeID && msg.content.startsWith("<@!737168830912004198> deu");
+                            msg.channel.send('y')
+                            await executeQuery(query).catch(e => { console.log(e); return; });
+                            msg.reply('kakera devolvida com sucesso!, fale com um administrador caso não tenha recebido');
+                            /* .awaitMessages(filter,{ max: 1, time: 5000, errors: ['ocorreu um erro, fale com um administrador'] }).then(async ()=>{
+                               
+                            }); */
+                            waiting = true;
                         }
-                    }, 5000)
-                    msg.channel.awaitMessages(filter, { max: 1, time: 15000, errors: ['ocorreu um erro, fale com um administrador'] }).then(async () => {
-                        let filter = a => a.author.id == mudaeID && msg.content.startsWith("<@!737168830912004198> deu");
-                        msg.channel.send('y')
-                        await executeQuery(query).catch(e => { console.log(e); return; });
-                        msg.reply('kakera devolvida com sucesso!, fale com um administrador caso não tenha recebido');
-                        /* .awaitMessages(filter,{ max: 1, time: 5000, errors: ['ocorreu um erro, fale com um administrador'] }).then(async ()=>{
-                           
-                        }); */
-                        waiting = true;
-                    }
-                    )
-                })
+                        )
+                    })
+                },500)
+               
             }
         }
     }
