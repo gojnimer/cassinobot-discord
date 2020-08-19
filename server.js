@@ -124,8 +124,8 @@ client.on('ready', async () => {
 client.on('message', async (msg) => {
 
 
-
-    let rouletteConfig = guildRoulettes.find(e => e.guildID == msg.guild.id);
+    /* 
+        let rouletteConfig = guildRoulettes.find(e => e.guildID == msg.guild.id); */
 
     /* if (msg.content === `${prefix}register`) {
 
@@ -171,6 +171,10 @@ client.on('message', async (msg) => {
         msg.channel.send('BOLTZ >:');
         return;
     }
+    if (msg.content.toLowerCase() === "puts") {
+        msg.channel.send('vai dar não');
+        return;
+    }
     console.log(msg);
 
     //COMANDOS NORMAIS
@@ -181,12 +185,12 @@ client.on('message', async (msg) => {
     if (message[0].toLowerCase() === `${prefix}bet` || message[0] === `${prefix}b`) {
         let check = await checkLogin(msg.author.id);
         if (check == 0) {
-            msg.reply('você ainda não se cadastrou, digite &register');
+            msg.reply(`você ainda não se cadastrou, digite ${prefix}register`);
             return;
         }
         let roulette = await executeQuery(`SELECT * FROM ROULETTE WHERE id_guild = '${msg.guild.id}' AND active = true`);
         if (roulette.length == 0) {
-            msg.reply("não existe roleta ativa no momento, digite &roulette para iniciar uma nova roleta.")
+            msg.reply(`não existe roleta ativa no momento, digite ${prefix}roulette para iniciar uma nova roleta.`)
             return;
         }
 
@@ -216,7 +220,7 @@ client.on('message', async (msg) => {
             let userb = query.parseSqlResult();
             if (isNaN(message[1])) { msg.reply('por favor digite um número válido!'); return; }
             if (userb.balance >= parseInt(message[1])) {
-                
+
                 let increaseRoulette = `
                 UPDATE
                 USERS,
@@ -278,7 +282,7 @@ client.on('message', async (msg) => {
                 await executeQuery(up);
 
                 if (parseInt(message[1]) == 0) {
-                    
+
                     let decreaseRoulette = `
                     UPDATE
                     ROULETTE AS dest,
@@ -299,11 +303,11 @@ client.on('message', async (msg) => {
                     ;`
                     await executeQuery(decreaseRoulette);
                     await executeQuery(`DELETE FROM ROULETTE_PLAYERS WHERE id_discord = '${msg.author.id}' AND id_roulette = '${roulette.id_roulette}'`);
-                    msg.reply('você tirou a sua aposta com sucesso');
+                    msg.reply('você retirou a sua aposta com sucesso');
                     return;
                 }
 
-                await executeQuery(`UPDATE ROULETTE as rt,(SELECT * FROM ROULETTE WHERE id_roulette = '${roulette.id_roulette}') as rtt,ROULETTE_PLAYERS AS rp,USERS,(SELECT * FROM USERS WHERE id_discord = "${msg.author.id}") as src SET rt.prize = rtt.prize + ${parseInt(message[1])}, rp.bet_amount = ${parseInt(message[1])}, USERS.balance = src.balance - ${parseInt(message[1])} WHERE USERS.id_discord = '${msg.author.id}' AND rp.id_roulette = '${roulette.id_roulette}' AND rp.id_discord = '${msg.author.id}' AND rp.id_roulette = '${roulette.id_roulette}'`);
+                await executeQuery(`UPDATE ROULETTE as rt,(SELECT * FROM ROULETTE WHERE id_roulette = '${roulette.id_roulette}') as rtt,ROULETTE_PLAYERS AS rp,USERS,(SELECT * FROM USERS WHERE id_discord = "${msg.author.id}") as src SET rt.prize = rtt.prize + ${parseInt(message[1])}, rp.bet_amount = ${parseInt(message[1])}, USERS.balance = src.balance - ${parseInt(message[1])} WHERE USERS.id_discord = '${msg.author.id}' AND rt.id_roulette = '${roulette.id_roulette}' AND rp.id_discord = '${msg.author.id}' AND rp.id_roulette = '${roulette.id_roulette}'`);
 
                 msg.reply(`você atualizou sua aposta para **${message[1]}** kakeras`);
                 return;
@@ -328,7 +332,7 @@ client.on('message', async (msg) => {
             msg.reply('você ainda não se cadastrou, digite &register');
             return;
         }
-        
+
         try {
             let roulette = await executeQuery(`SELECT id_roulette FROM ROULETTE WHERE id_guild = '${msg.guild.id}' AND active = true`);
             console.log(roulette);
@@ -337,7 +341,7 @@ client.on('message', async (msg) => {
                 msg.reply('roleta iniciada');
                 return;
             } else {
-                msg.reply('já existe uma roulette ativa nesse servidor, digite &bet para jogar');
+                msg.reply(`já existe uma roulette ativa nesse servidor, digite ${prefix}bet para jogar`);
                 return;
             }
         } catch{
@@ -348,12 +352,12 @@ client.on('message', async (msg) => {
 
     if (message[0] === `${prefix}retrieve`) {
         if (message.length != 2) {
-            msg.reply('Não entendi, use &retrieve <valor>');
+            msg.reply(`Não entendi, use ${prefix}retrieve <valor>`);
             return;
         }
         let check = await checkLogin(msg.author.id).catch((e) => { msg.reply(e); return; });
         if (check == 0) {
-            msg.reply('você ainda não se cadastrou, digite &register');
+            msg.reply(`você ainda não se cadastrou, digite ${prefix}register`);
             return;
         }
         let query = await executeQuery(`SELECT balance FROM USERS WHERE id_discord = ${msg.author.id}`).catch(e => { msg.reply("ocorreu um erro, tente novamente"); return; });
@@ -377,7 +381,7 @@ client.on('message', async (msg) => {
                 dest.id_discord = "${msg.author.id}"
             ;`
             /* await executeQuery(query).catch(e => { console.log(e); return; }); */
-            setTimeout(()=>{
+            setTimeout(() => {
                 msg.channel.send(`$givek ${formatID(msg.author.id)} ${message[1]}`).then(() => {
                     let filter = a => a.author.id == mudaeID && a.content.startsWith('**cassinobot');
                     let waiting = false;
@@ -388,23 +392,23 @@ client.on('message', async (msg) => {
                     }, 5000)
                     msg.channel.awaitMessages(filter, { max: 1, time: 15000, errors: ['ocorreu um erro, fale com um administrador'] }).then(
                         async () => {
-                        let filter = a => a.author.id == mudaeID && a.content.startsWith("<@!737168830912004198> deu");
-                        msg.channel.send('y')
-                        await executeQuery(query).catch(e => { console.log(e); return; });
-                        msg.reply('kakera devolvida com sucesso!, caso não tenha recebido fale com um administrador.')
-                        waiting = true;
-    
-                      /*   .awaitMessages(filter,{ max: 1, time: 5000, errors: ['ocorreu um erro, fale com um administrador'] }).then(async ()=>{
-                            
-                          
-                        }); */
-                        
-                        
-                    }
+                            let filter = a => a.author.id == mudaeID && a.content.startsWith("<@!737168830912004198> deu");
+                            msg.channel.send('y')
+                            await executeQuery(query).catch(e => { console.log(e); return; });
+                            msg.reply('kakera devolvida com sucesso!, caso não tenha recebido fale com um administrador.')
+                            waiting = true;
+
+                            /*   .awaitMessages(filter,{ max: 1, time: 5000, errors: ['ocorreu um erro, fale com um administrador'] }).then(async ()=>{
+                                  
+                                
+                              }); */
+
+
+                        }
                     )
                 })
-            },500)
-           
+            }, 500)
+
             return;
         } else {
             msg.reply('saldo insuficiente');
@@ -412,6 +416,29 @@ client.on('message', async (msg) => {
         }
     }
 
+
+    if (message[0] === `${prefix}cassinohelp`) {
+        /* msg.channel.send('teste'); */
+        const exampleEmbed = new Discord.MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle('Some title')
+            .setURL('https://discord.js.org/')
+            .setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
+            .setDescription('Some description here')
+            .setThumbnail('https://i.imgur.com/wSTFkRM.png')
+            .addFields(
+                { name: 'Regular field title', value: 'Some value here' },
+                { name: '\u200B', value: '\u200B' },
+                { name: 'Inline field title', value: 'Some value here', inline: true },
+                { name: 'Inline field title', value: 'Some value here', inline: true },
+            )
+            .addField('Inline field title', 'Some value here', true)
+            .setImage('https://i.imgur.com/wSTFkRM.png')
+            .setTimestamp()
+            .setFooter('Some footer text here', 'https://i.imgur.com/wSTFkRM.png');
+
+        msg.channel.send(exampleEmbed);
+    }
 
     if (message[0] === `${prefix}register`) {
         let check = await checkLogin(msg.author.id).catch((e) => { msg.reply(e); return; });
@@ -429,11 +456,11 @@ client.on('message', async (msg) => {
         return;
     }
 
-    if (message[0] === `${prefix}balance`) {
+    if (message[0] === `${prefix}balance` && message.length == 1) {
         let e = await executeQuery(`SELECT EXISTS(SELECT * FROM USERS WHERE id_discord = "${msg.author.id}") as id`).catch(e => { msg.reply("ocorreu um erro, tente novamente"); return; });
         let ret = e.parseSqlResult();
         if (ret.id == 0) {
-            msg.reply('você ainda não se cadastrou, digite &register');
+            msg.reply(`você ainda não se cadastrou, digite ${prefix}register`);
             return;
         }
         let a = await executeQuery(`SELECT balance FROM USERS WHERE id_discord = ${msg.author.id}`).catch(e => { msg.reply("ocorreu um erro, tente novamente"); return; });
@@ -441,6 +468,10 @@ client.on('message', async (msg) => {
         msg.reply(`você tem um saldo de **${ret2.balance}** kakeras.`);
         return;
     }
+
+
+
+
 
     if (message.length == 4) {
         if (message[3] == '<@737168830912004198>' && msg.author.id === mudaeID) {
@@ -451,7 +482,7 @@ client.on('message', async (msg) => {
                 let ret = e.parseSqlResult();
                 console.log('teessteee', ret);
                 if (ret.id === 0) {
-                    msg.channel.send(`${message[0]}, se registre usando &register antes de fazer um deposito.`);
+                    msg.channel.send(`${message[0]}, se registre usando ${prefix}register antes de fazer um deposito.`);
                     throw 'Error';
                 } else {
                     let query = `
@@ -480,7 +511,7 @@ client.on('message', async (msg) => {
                 console.log(error);
                 let value = message[2].split('**');
                 if (error != 'Error') {
-                    msg.channel.send(`${message[0]}, ocorreu um erro, verifique se você é registrado usando &register`);
+                    msg.channel.send(`${message[0]}, ocorreu um erro, verifique se você é registrado usando ${prefix}register`);
                 }
 
                 msg.channel.send(`$givek ${message[0]} ${value[1]}`).then(() => {
@@ -507,71 +538,69 @@ client.on('message', async (msg) => {
         }
     }
 
-    if (message[0] === `${prefix}botbalance`) {
-        msg.channel.send("$k")
-    }
+    if (message[0] === `${prefix}botbalance`) setTimeout(() => { msg.channel.send("$k") }, 500);
 
     /*  if (message[0] === `${prefix}ask`) {
          let r = ['talvez', 'sim', 'não', 'sim', 'não', 'sim', 'não', 'sim', 'não', 'sim', 'não', 'sim', 'não', 'sim', 'não', 'sim', 'não', 'sim', 'não'];
          msg.reply(_.sample(r));
      } */
-   
-       
 
 
-    if (message[0].toLowerCase() === `${prefix}players` || message[0] === `${prefix}p`) {
+
+
+    if (message[0].toLowerCase() === `${prefix}players` || message[0] === `${prefix}ps`) {
         let check = await checkLogin(msg.author.id);
         if (check == 0) {
-            msg.reply('você ainda não se cadastrou, digite &register');
+            msg.reply(`você ainda não se cadastrou, digite ${prefix}register`);
             return;
         }
         let roulette = await executeQuery(`SELECT * FROM ROULETTE WHERE id_guild = '${msg.guild.id}' AND active = true`);
         if (roulette.length == 0) {
-            msg.reply("não existe roleta ativa no momento, digite &roulette para iniciar uma nova roleta.")
+            msg.reply(`não existe roleta ativa no momento, digite ${prefix}roulette para iniciar uma nova roleta.`)
             return;
         }
-        const embed = new Discord.MessageEmbed().setTitle("LISTA DE PARTICIPANTES").setColor('#0099ff').setImage('https://media.giphy.com/media/3o6ZthJkc3ZuvBOSGs/giphy.gif');
+          /* const embed = new Discord.MessageEmbed().setTitle("LISTA DE PARTICIPANTES").setColor('#0099ff').setImage('https://media.giphy.com/media/3o6ZthJkc3ZuvBOSGs/giphy.gif'); */
         roulette = roulette.parseSqlResult();
         let roulettePlayers = await executeQuery(`SELECT id_discord,bet_amount FROM ROULETTE_PLAYERS WHERE id_roulette = '${roulette.id_roulette}'`).catch(e => console.log(e));
-        if(roulettePlayers.length > 0){
+        if (roulettePlayers.length > 0) {
             let players = [];
             roulettePlayers.forEach((e, i) => {
-                
+
                 players.push(`**${formatID(e.id_discord)}** apostou **${e.bet_amount}** kakeras`);
             })
-            embed.addFields(players)
-            msg.channel.send(`**JOGADORES ATIVOS NESSA ROLETA** \n ${players.join(' \n ')}`);
+          /*   embed.addFields(players) */
+            msg.channel.send(`**JOGADORES ATIVOS NESSA ROLETA** \n ${players.join(' \n ')}\n\n\n **Total: ${roulette.prize} kakeras**`);
             return;
-        }else{
+        } else {
             msg.reply('nenhum jogador apostou nessa roleta');
             return;
         }
-     
+
     }
 
     if (msg.content.toLowerCase() === `${prefix}spin`) {
 
         let check = await checkLogin(msg.author.id);
         if (check == 0) {
-            msg.reply('você ainda não se cadastrou, digite &register');
+            msg.reply(`você ainda não se cadastrou, digite ${prefix}register`);
             return;
         }
         let roulette = await executeQuery(`SELECT * FROM ROULETTE WHERE id_guild = '${msg.guild.id}' AND active = true`);
         if (roulette.length == 0) {
-            msg.reply("não existe roleta ativa no momento, digite &roulette para iniciar uma nova roleta.")
+            msg.reply(`não existe roleta ativa no momento, digite ${prefix}roulette para iniciar uma nova roleta.`)
             return;
         }
         roulette = roulette.parseSqlResult();
-        if(roulette.id_creator != msg.author.id){
+        if (roulette.id_creator != msg.author.id) {
             msg.reply(`somente o dealer(${formatID(roulette.id_creator)}) pode usar esse comando.`);
             return;
         }
         let roulettePlayers = await executeQuery(`SELECT * FROM ROULETTE_PLAYERS WHERE id_roulette = '${roulette.id_roulette}'`);
-        if(roulettePlayers.length != 0){
+        if (roulettePlayers.length != 0) {
             let roll = [];
-            roulettePlayers.forEach((item,index) =>{
+            roulettePlayers.forEach((item, index) => {
                 i = 0;
-                while(i != item.bet_amount){
+                while (i != item.bet_amount) {
                     roll.push(index);
                     i++;
                 }
@@ -581,10 +610,10 @@ client.on('message', async (msg) => {
             console.log(e.bet_amount);
             await executeQuery(`UPDATE USERS, ROULETTE, (SELECT * FROM ROULETTE WHERE id_roulette = '${roulette.id_roulette}') AS rou,
              (SELECT * FROM USERS WHERE id_discord = '${e.id_discord}') AS src SET ROULETTE.active = 0, ROULETTE.winner = '${e.id_discord}',
-              users.balance = src.balance + rou.prize WHERE users.id_discord = '${e.id_discord}' AND ROULETTE.id_roulette = '${roulette.id_roulette}'`).catch((e) => {console.log(e); msg.reply('ocorreu um erro')})
+              users.balance = src.balance + rou.prize WHERE users.id_discord = '${e.id_discord}' AND ROULETTE.id_roulette = '${roulette.id_roulette}'`).catch((e) => { console.log(e); msg.reply('ocorreu um erro') })
             msg.channel.send(`${formatID(e.id_discord)} é o vencedor.`)
         }
-        
+
         /* if (!rouletteConfig) {
             msg.reply("não existe roleta ativa no momento, digite &roulette para iniciar uma nova roleta.")
             return;
@@ -609,9 +638,9 @@ client.on('message', async (msg) => {
         return; */
     }
 
-    if (message[0] === `${prefix}cancelroulette` || message[0] === `${prefix}cr`) {
+    /* if (message[0] === `${prefix}cancelroulette` || message[0] === `${prefix}cr`) {
         if (!rouletteConfig) {
-            msg.reply("não existe roleta ativa no momento, digite &roulette para iniciar uma nova roleta.")
+            msg.reply(`não existe roleta ativa no momento, digite ${prefix}roulette para iniciar uma nova roleta.`)
             return;
         }
         if (rouletteConfig.dealerID !== msg.author.id) {
@@ -646,7 +675,7 @@ client.on('message', async (msg) => {
         msg.channel.send(`A roleta de ${formatID(msg.author.id)} foi cancelada!`);
         return;
 
-    }
+    } */
 
 
 });
