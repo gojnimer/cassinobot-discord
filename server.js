@@ -327,7 +327,7 @@ client.on('message', async (msg) => {
 
 
 
-    if (message[0] === `${prefix}roulette` || message[0] === `${prefix}r`) {
+    if (message[0] === `${prefix}roulette` || message[0] === `${prefix}rlt`) {
         let minBet = 0;
         let check = await checkLogin(msg.author.id).catch((e) => { msg.reply(e); return; });
         if (check == 0) {
@@ -442,19 +442,19 @@ client.on('message', async (msg) => {
             .setColor('#cc1b26')
             .setTitle('Bem-vindo ao cassino do boltz')
             .setAuthor('Comandos do cassinobot', 'https://4.bp.blogspot.com/-R2r-PNdHzog/Ug2OOz8-AjI/AAAAAAAAgrk/MGPugRqy4Bc/s1600/news_large_touch_stamp1.jpg')
-            .setDescription('Tem kakeras sobrando? Se sentindo sortudo hoje?'+ <br/> + 'Aqui no Cassinobot do boltz você pode apostar seus kakeras pra tentar passar a mao na carteira dos seus amigos.'+ <br/> +'Quanto mais kakeras você apostar, masi chances de ganhar!')
+            .setDescription(`Tem kakeras sobrando? Se sentindo sortudo hoje?\nAqui no Cassinobot do boltz você pode apostar seus kakeras pra tentar passar a mao na carteira dos seus amigos.\nQuanto mais kakeras você apostar, mais chances de ganhar!`)
             .setThumbnail('https://i.imgur.com/Zbnfud3.png')
             .addFields(
-                { name: '$register', value: 'Registra você no banco de dados do cassino.' },
-                { name: '$givek @cassinobot do boltz <quantidade de kakeras>', value: 'Deposita kakeras na banca do cassino.' },
-                { name: '$balance', value: 'Mostra quanta kakera você tem na banca do cassino.' },
-                { name: '$retrieve <quantidade de kakera>', value: 'Saca seus kakeras da banca do cassino.' },
-                { name: '$roulette <opcional - minimo de kakera á apostar> ($r) ', value: 'Cria uma roleta de apostas.' },
-                { name: '$bet <quantidade de kakera>', value: 'Aposta kakeras na roleta ativa.(Ao ultiliza-lo mais uma vez você substitui sua aposta, não adiciona.' },
-                { name: '$players', value: 'Mostra as apostas da roleta ativa.' },
-                { name: '$spin', value: 'Sorteia um vencedor na roleta ativa.(Apenas o criador da roleta pode sortear.)' },
-                { name: '$cassinohelp ($chelp)', value: 'Mostra os comandos do cassinobot.' },
-                { name: '$botbalance', value: 'Mostra quanta kakera o cassino tem.' },
+                { name: `${prefix}register`, value: 'Registra você no banco de dados do cassino.' },
+                { name: `${prefix}givek @cassinobot do boltz <quantidade de kakeras>`, value: 'Deposita kakeras no banco do cassino.' },
+                { name: `${prefix}balance`, value: 'Mostra quanta kakera você tem no banco do cassino.' },
+                { name: `${prefix}retrieve <quantidade de kakera>`, value: 'Saca seus kakeras do banco do cassino.' },
+                { name: `${prefix}roulette <opcional - minimo de kakera á apostar> (${prefix}rlt) `, value: 'Cria uma roleta de apostas.' },
+                { name: `${prefix}bet <quantidade de kakera>`, value: 'Aposta kakeras na roleta ativa.(Ao ultiliza-lo mais uma vez você substitui sua aposta, não adiciona.' },
+                { name: `${prefix}players`, value: 'Mostra as apostas da roleta ativa.' },
+                { name: `${prefix}spin`, value: 'Sorteia um vencedor na roleta ativa.(Apenas o criador da roleta pode sortear.)' },
+                { name: `${prefix}cassinohelp (${prefix}chelp)`, value: 'Mostra os comandos do cassinobot.' },
+                { name: `${prefix}botbalance`, value: 'Mostra quanta kakera o cassino tem.' },
             )
             .setFooter('Que as apostas comecem e que a sorte esteja sempre em seu favor', 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS3cEyAQLTrs6QA-rpZ_7WLzOuy-HFwee6SKQ&usqp=CAU');
 
