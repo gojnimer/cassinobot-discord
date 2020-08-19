@@ -215,10 +215,11 @@ client.on('message', async (msg) => {
             }
 
         }
+        if (isNaN(message[1])) { msg.reply('por favor digite um número válido!'); return; };
+        if(parseInt(message[1]) < roulette.min_bet && parseInt(message[1]) != 0 ) { msg.reply(`a aposta mínima nessa roleta é de **${roulette.min_bet}** kakeras.`); return; };
         if (betU.length == 0) {
             let query = await executeQuery(`SELECT balance FROM USERS WHERE id_discord = ${msg.author.id}`).catch(e => { msg.reply("ocorreu um erro, tente novamente"); return; });
             let userb = query.parseSqlResult();
-            if (isNaN(message[1])) { msg.reply('por favor digite um número válido!'); return; }
             if (userb.balance >= parseInt(message[1])) {
 
                 let increaseRoulette = `
@@ -327,17 +328,35 @@ client.on('message', async (msg) => {
 
 
     if (message[0] === `${prefix}roulette` || message[0] === `${prefix}r`) {
+        let minBet = 0;
         let check = await checkLogin(msg.author.id).catch((e) => { msg.reply(e); return; });
         if (check == 0) {
-            msg.reply('você ainda não se cadastrou, digite &register');
+            msg.reply(`você ainda não se cadastrou, digite ${prefix}register`);
             return;
+        }
+        if(message.length > 2){
+            msg.reply(`não entendi, use ${prefix}roulette <aposta mínima entre 1-2000 (opcional)>`);
+            return;
+        } 
+        if(message.length == 2){
+            if(isNaN(message[1])){
+                msg.reply(`não entendi, use ${prefix}roulette <aposta mínima entre 1-2000 (opcional)>`);
+                return;
+            }
+            let v = parseInt(message[1]);
+            if(v > 2000){
+                msg.reply(`o valor da aposta mínima não pode ultrapassar 2000`);
+                return;
+            }
+
+            minBet = v;
         }
 
         try {
             let roulette = await executeQuery(`SELECT id_roulette FROM ROULETTE WHERE id_guild = '${msg.guild.id}' AND active = true`);
             console.log(roulette);
             if (roulette.length == 0) {
-                await executeQuery(`INSERT INTO ROULETTE VALUES (null,'${msg.guild.id}','${msg.author.id}','${Gtoken()}',0,0,'none',true);`);
+                await executeQuery(`INSERT INTO ROULETTE VALUES (null,'${msg.guild.id}','${msg.author.id}','${Gtoken()}',0,0,'none',true,${minBet});`);
                 msg.reply('roleta iniciada');
                 return;
             } else {
