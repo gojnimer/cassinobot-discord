@@ -4,7 +4,7 @@ const _ = require('lodash');
 const mysql = require("mysql");
 
 
-var mudaeID = /* "551329384783544321"  */"585401301731377163";
+var mudaeID = "566216057421955074"/* "551329384783544321"  "585401301731377163"*/;
 const client = new Discord.Client();
 const dbconfig = {
     host: "us-cdbr-east-02.cleardb.com",
